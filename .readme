@@ -1,0 +1,5 @@
+// package.json setup npm start
+---------server side------
+
+1. start server first and the client(react app)
+2. concurrently run server and client

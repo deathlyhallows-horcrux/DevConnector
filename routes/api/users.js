@@ -5,11 +5,22 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = require('../../models/User');
 const keys = require('../../config/keys');
+const passport = require('passport');
+const ValidateRegisterInput = require('../../validation/register');
+const ValidateLoginInput = require('../../validation/login');
+
 
 // @route   POST api/users/register
 // @desc    Register user
 // @access  Public
 router.post('/register', (req, res) => {
+  //validation
+  debugger
+  const {errors, isValid} = ValidateRegisterInput(req.body);
+  if(!isValid){
+    return res.status(400).json(errors);
+  }
+
   User.findOne({email: req.body.email })
     .then(user => {
       if (user){
@@ -27,7 +38,7 @@ router.post('/register', (req, res) => {
           password: req.body.password,
           avatar
         });
-        console.log(req.body);
+      //  console.log(req.body);
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(req.body.password, salt, (err, hash) => {
             if (err) throw err;
@@ -48,6 +59,11 @@ router.post('/register', (req, res) => {
 // @desc    Login user / return JWT token
 // @access  Public
 router.post('/login', (req, res) => {
+  //validation
+  const {errors, isValid} = ValidateLoginInput(req.body);
+  if(!isValid){
+    return res.status(400).json(errors);
+  }
 
   User.findOne({email: req.body.email})
     .then(user => {
@@ -82,6 +98,19 @@ router.post('/login', (req, res) => {
     .catch(err => console.log(err));
 })
 
+// @route   GET api/users/login
+// @desc   return current user
+// @access  Private
+router.get(
+  '/current', 
+  passport.authenticate('jwt', {session: false}), //passport.js code is called to execute since it is defined to do so in server.js
+  (req, res) => {
+    res.json({ //req is used becuz it is coming from passport and is not to UI(so not response)
+      id: req.user.id, 
+      name: req.user.name,
+      email: req.user.email
+    });
+});
 
 module.exports = router;
 

@@ -1,0 +1,11 @@
+-----------client side - react----------------
+
+1. Link - diff from href routes to another component without page refresh
+
+2. debugging with VS code : Launch.json for client
+> add config > npm :Launch program: > "${workspaceFolder}/server.js" > click on run launch program (server starts running)
+>npm start client > Launch Chrome against local host (from debug window on left.)
+ 
+ Now you can debug both client and server
+
+ 3. writing custom components eg: private route
