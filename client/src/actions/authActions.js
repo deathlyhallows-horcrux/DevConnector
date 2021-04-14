@@ -6,7 +6,7 @@ import axios from 'axios'; //allows to call API from JS code
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 
-
+//action creater using thunk dispatch
 export const registerUser = (userData, history) => dispatch => {
   axios
   .post("api/users/register", userData)
